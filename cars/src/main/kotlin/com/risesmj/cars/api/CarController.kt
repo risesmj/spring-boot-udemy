@@ -43,10 +43,7 @@ class CarController {
 
     @GetMapping("/{id}")
     fun getCarById(@PathVariable id: Long): ResponseEntity<CarDTO>{
-         return service.getCarById(id).map{
-             ResponseEntity.ok(it)
-         }
-        .orElse(ResponseEntity.notFound().build())
+         return ResponseEntity.ok(service.getCarById(id))
     }
 
     @GetMapping("/type/{type}")
@@ -59,28 +56,20 @@ class CarController {
 
     @PostMapping
     fun post(@RequestBody car: Car): ResponseEntity<CarDTO>{
-        var c = service.save(car)
+        var c = service.insert(car)
         return ResponseEntity.created(getUri(c.id)).build()
     }
 
     @PutMapping("/{id}")
     fun put(@PathVariable id: Long, @RequestBody car: Car) : ResponseEntity<CarDTO>{
-        try{
-            var carDTO = service.update(id, car)
-            return ResponseEntity.ok(carDTO)
-        }catch (e: java.lang.RuntimeException){
-            return ResponseEntity.badRequest().build()
-        }
+        var carDTO = service.update(id, car)
+        return ResponseEntity.ok(carDTO)
     }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Any>{
-        try {
-            service.delete(id)
-            return ResponseEntity.ok().build()
-        }catch(e: java.lang.RuntimeException){
-            return ResponseEntity.notFound().build()
-        }
+        service.delete(id)
+        return ResponseEntity.ok().build()
     }
 
     private fun getUri(id: Long?) =

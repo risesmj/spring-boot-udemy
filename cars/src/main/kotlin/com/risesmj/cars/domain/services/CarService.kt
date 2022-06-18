@@ -1,11 +1,12 @@
 package com.risesmj.cars.domain.services
 
+import com.risesmj.cars.api.exception.MyNotFoundException
 import com.risesmj.cars.domain.dto.CarDTO
 import com.risesmj.cars.domain.entities.Car
 import com.risesmj.cars.domain.repositories.CarRepository
+import org.modelmapper.internal.util.Assert
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.Optional
 
 @Service
 class CarService {
@@ -16,16 +17,17 @@ class CarService {
         return repository.findAll().stream().map { CarDTO.fromCar(it) }.toList()
     }
 
-    fun getCarById(id: Long): Optional<CarDTO>{
-        return repository.findById(id).map { CarDTO.fromCar(it) }
+    fun getCarById(id: Long): CarDTO{
+        return repository.findById(id).map { CarDTO.fromCar(it) }.orElseThrow{ MyNotFoundException() }
     }
 
     fun getCarByType(type: String): MutableList<CarDTO>{
         return repository.findByType(type).stream().map { CarDTO.fromCar(it) }.toList()
     }
 
-    fun save(car: Car): Car{
-        return repository.save(car)
+    fun insert(car: Car): CarDTO{
+        Assert.isNull(car.id)
+        return CarDTO.fromCar(repository.save(car))
     }
 
     fun update(id: Long, car: Car): CarDTO{
@@ -40,16 +42,12 @@ class CarService {
 
             return CarDTO.fromCar(db)
         }else{
-            throw java.lang.RuntimeException("Não foi possível atualizar o registro")
+            throw MyNotFoundException()
         }
     }
 
     fun delete(id: Long){
-        if(getCarById(id).isPresent) {
-            repository.deleteById(id)
-        }else{
-            throw java.lang.RuntimeException("Registro não localizado")
-        }
+        repository.deleteById(id)
     }
 
     fun getCarsFake(): List<Car>{

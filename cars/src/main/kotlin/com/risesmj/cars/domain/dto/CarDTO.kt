@@ -1,6 +1,7 @@
 package com.risesmj.cars.domain.dto
 
 import com.risesmj.cars.domain.entities.Car
+import com.risesmj.cars.domain.entities.CarType
 import org.modelmapper.ModelMapper
 
 
@@ -9,7 +10,7 @@ import org.modelmapper.ModelMapper
 class CarDTO(
     var id: Long?,
     var name: String?,
-    var type: String?){
+    var type: CarType?){
 
     companion object{
         fun fromCar(c: Car): CarDTO{

@@ -1,9 +1,6 @@
 package com.risesmj.cars.domain.entities
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 data class Car(
@@ -11,5 +8,17 @@ data class Car(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     var name: String? = null,
-    var type: String? = null,
+    var description: String? = null,
+    var urlPhoto: String? = null,
+    var urlVideo: String? = null,
+    var latitude: String? = null,
+    var longitude: String? = null,
+    @Enumerated(EnumType.STRING)
+    var type: CarType? = null,
 )
+
+enum class CarType{
+    CLASSIC,
+    LUXURY,
+    SPORTS
+}
