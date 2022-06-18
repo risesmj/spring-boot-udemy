@@ -3,6 +3,7 @@ package com.risesmj.cars.domain.entities
 import javax.persistence.*
 
 @Entity
+@Table
 data class Car(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
